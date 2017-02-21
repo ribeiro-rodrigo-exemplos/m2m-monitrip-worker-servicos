@@ -1,0 +1,9 @@
+{
+    "collection":"${exchange.properties.collection}",
+    "action":"${exchange.properties.action}",
+    "data":{
+        "idCliente":${exchange.properties.idCliente},
+        "dataServico":"${exchange.properties.dtSincronismo}",
+        "servicos":${body}
+    }
+}

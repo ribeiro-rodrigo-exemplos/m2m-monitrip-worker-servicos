@@ -1,0 +1,20 @@
+camel:
+  springboot:
+    main-run-controller: true
+
+datasource:
+  url: jdbc:mysql://172.16.193.32/frota_zn4?useTimezone=true&serverTimezone=America/Sao_Paulo
+  port: 3306
+  user: frota
+  password: frota
+
+servicoPersistencia:
+  rabbitmq:
+    url: 172.16.193.13/lazypersistence?queue=lazypersistence&username=admin&password=admin
+  collection: ServicosMonitriip
+  action: insert
+
+rjconsultores:
+  url: 34.198.151.111:9991/WSMonitriip/busca/buscaServico
+  authorization: Basic bTJtOnJqbTJtcmo= # credenciais para autenticação Http Basic do webservice rjconsultores
+  consumer-period: 10s # período que o serviço irá dormir até realizar a próxima consulta
