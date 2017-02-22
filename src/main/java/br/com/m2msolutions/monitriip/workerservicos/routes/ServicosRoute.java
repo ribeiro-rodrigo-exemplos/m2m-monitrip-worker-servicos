@@ -40,14 +40,20 @@ public class ServicosRoute extends RouteBuilder {
                     setProperty("collection",constant(servicoPersistenciaProps.getCollection())).
                     setProperty("action",constant(servicoPersistenciaProps.getAction())).
                     to("direct:loadServices").
-                    marshal().
-                        xmljson().
-                    unmarshal()
-                        .string().
-                            to("velocity:templates/servico-persistencia.vm").
-                            to("sql:classpath:sql/update-load-date.sql?dataSource=mysql").
-                            to(String.format("rabbitmq://%s&durable=true&autoDelete=false",
-                                    servicoPersistenciaProps.getUrlRabbitmq())).
+                    marshal().string().
+                    choice().
+                        when(xpath("/servicoes/servico/retorno/text()='0'")).
+                            to("mock:end").
+                        otherwise().
+                            marshal().
+                                xmljson().
+                            unmarshal()
+                                .string().
+                                    to("velocity:templates/servico-persistencia.vm").
+                                    to("sql:classpath:sql/update-load-date.sql?dataSource=mysql").
+                                    to(String.format("rabbitmq://%s&durable=true&autoDelete=false",
+                                            servicoPersistenciaProps.getUrlRabbitmq())).
+                    endChoice().
         end();
 
         from("direct:loadServices").
