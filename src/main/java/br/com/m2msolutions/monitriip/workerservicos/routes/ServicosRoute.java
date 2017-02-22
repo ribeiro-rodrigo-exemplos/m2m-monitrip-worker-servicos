@@ -42,9 +42,7 @@ public class ServicosRoute extends RouteBuilder {
                     to("direct:loadServices").
                     marshal().string().
                     choice().
-                        when(xpath("/servicoes/servico/retorno/text()='0'")).
-                            to("mock:end").
-                        otherwise().
+                        when(xpath("/servicoes/servico[count(retorno)='0']")).
                             marshal().
                                 xmljson().
                             unmarshal()
