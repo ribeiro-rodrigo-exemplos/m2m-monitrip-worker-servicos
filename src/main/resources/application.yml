@@ -1,3 +1,11 @@
+application:
+  name: m2m-monitriip-worker-servicos
+  version: 1.0.0
+
+spring:
+  application:
+    name: m2m-worker-servicos
+
 camel:
   springboot:
     main-run-controller: true
