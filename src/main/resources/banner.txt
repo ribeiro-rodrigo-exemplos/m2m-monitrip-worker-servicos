@@ -1,7 +1,7 @@
                                                                                   
 
 
-
+${AnsiColor.BRIGHT_GREEN}
 MMMMMMMM               MMMMMMMM 222222222222222    MMMMMMMM               MMMMMMMM
 M:::::::M             M:::::::M2:::::::::::::::22  M:::::::M             M:::::::M
 M::::::::M           M::::::::M2::::::222222:::::2 M::::::::M           M::::::::M
@@ -18,7 +18,8 @@ M::::::M               M::::::M2:::::2       222222M::::::M               M:::::
 M::::::M               M::::::M2::::::2222222:::::2M::::::M               M::::::M
 M::::::M               M::::::M2::::::::::::::::::2M::::::M               M::::::M
 MMMMMMMM               MMMMMMMM22222222222222222222MMMMMMMM               MMMMMMMM
+${AnsiColor.BRIGHT_WHITE}
 ----------------------------------------------------------------------------------
-${application.name} - v${application.version}
-----------------------------------------------------------------------------------
+${AnsiColor.BRIGHT_CYAN}${application.name} ${AnsiColor.BRIGHT_WHITE}-${AnsiColor.BRIGHT_WHITE} ${AnsiColor.BRIGHT_YELLOW}v${application.version}
+${AnsiColor.BRIGHT_WHITE}----------------------------------------------------------------------------------
 
