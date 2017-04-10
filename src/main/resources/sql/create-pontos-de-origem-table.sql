@@ -1,0 +1,6 @@
+CREATE TABLE PONTOS_DE_ORIGEM(
+  id VARCHAR(50) PRIMARY KEY,
+  localidade VARCHAR(80),
+  municipio VARCHAR(50),
+  uf VARCHAR(50)
+);
