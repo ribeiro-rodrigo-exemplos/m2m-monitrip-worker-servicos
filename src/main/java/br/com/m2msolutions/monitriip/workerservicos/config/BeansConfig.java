@@ -1,7 +1,10 @@
 package br.com.m2msolutions.monitriip.workerservicos.config;
 
+import br.com.m2msolutions.monitriip.workerservicos.dto.ServicoDTO;
 import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
+import com.thoughtworks.xstream.XStream;
 import org.apache.camel.dataformat.csv.CsvDataFormat;
+import org.apache.camel.dataformat.xstream.XStreamDataFormat;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +14,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 /**
  * Created by Rodrigo Ribeiro on 15/02/17.
@@ -29,7 +33,7 @@ public class BeansConfig {
    DataSource h2(){
        return new EmbeddedDatabaseBuilder()
                     .setType(EmbeddedDatabaseType.H2)
-                    .addScript("sql/create-pontos-de-origem-table.sql")
+                    .addScript("sql/create-pontos-table.sql")
                     .build();
    }
 
@@ -46,5 +50,14 @@ public class BeansConfig {
         csvFormat.setUseMaps(true);
 
         return csvFormat;
+    }
+
+    @Bean
+    XStreamDataFormat xStreamDataFormat(){
+        XStream xStream = new XStream();
+        xStream.alias("servicoes",List.class);
+        xStream.alias("servico", ServicoDTO.class);
+
+        return new XStreamDataFormat(xStream);
     }
 }

@@ -5,7 +5,7 @@
 
 	<groupId>br.com.m2msolutions.monitriip.workerservicos</groupId>
 	<artifactId>m2m-monitriip-worker-servicos</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<packaging>jar</packaging>
 
 	<name>m2m-monitriip-worker-servicos</name>
@@ -52,7 +52,7 @@
 
         <dependency>
             <groupId>org.apache.camel</groupId>
-            <artifactId>camel-xmljson</artifactId>
+            <artifactId>camel-jackson</artifactId>
             <version>${camel-version}</version>
         </dependency>
 
@@ -89,12 +89,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>xom</groupId>
-            <artifactId>xom</artifactId>
-            <version>1.2.5</version>
         </dependency>
 
         <dependency>

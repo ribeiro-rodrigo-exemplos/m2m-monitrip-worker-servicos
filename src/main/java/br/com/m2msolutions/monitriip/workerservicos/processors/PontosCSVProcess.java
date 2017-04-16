@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by Rodrigo Ribeiro on 10/04/17.
  */
 @Component
-public class PontosDeOrigemCSVProcess implements Processor {
+public class PontosCSVProcess implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
