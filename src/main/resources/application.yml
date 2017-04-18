@@ -2,6 +2,8 @@ application:
   name: m2m-monitriip-worker-servicos
   version: 1.1.0
 
+pontos-path-file: src/main/resources/files
+
 spring:
   application:
     name: m2m-worker-servicos
