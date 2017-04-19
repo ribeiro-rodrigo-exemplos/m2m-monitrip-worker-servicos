@@ -82,11 +82,11 @@ public class ServicosRoute extends RouteBuilder {
             split().
                 body().
                 setProperty("originalPayload",simple("${body}")).
-                setProperty("idLocalidade",simple("${body.codOrigem}")).
+                setProperty("idLocalidade",simple("${body.origem}")).
                 to(String.format("sql:classpath:sql/find-ponto.sql?dataSource=h2&outputType=SelectOne&outputClass=%s",
                         PontoDTO.class.getName())).
                 transform(simple("${property.originalPayload.setPontoOrigem(${body})}")).
-                setProperty("idLocalidade",simple("${property.originalPayload.codDestino}")).
+                setProperty("idLocalidade",simple("${property.originalPayload.destino}")).
                 to(String.format("sql:classpath:sql/find-ponto.sql?dataSource=h2&outputType=SelectOne&outputClass=%s",
                         PontoDTO.class.getName())).
                 transform(simple("${property.originalPayload.setPontoDestino(${body})}")).
