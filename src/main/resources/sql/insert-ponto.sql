@@ -1,0 +1,1 @@
+insert into PONTOS(id,localidade,municipio,uf) values (:#${body[id]},:#${body[localidade]},:#${body[municipio]},:#${body[uf]});

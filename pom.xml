@@ -5,7 +5,7 @@
 
 	<groupId>br.com.m2msolutions.monitriip.workerservicos</groupId>
 	<artifactId>m2m-monitriip-worker-servicos</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.1.0</version>
 	<packaging>jar</packaging>
 
 	<name>m2m-monitriip-worker-servicos</name>
@@ -52,7 +52,7 @@
 
         <dependency>
             <groupId>org.apache.camel</groupId>
-            <artifactId>camel-xmljson</artifactId>
+            <artifactId>camel-jackson</artifactId>
             <version>${camel-version}</version>
         </dependency>
 
@@ -60,6 +60,24 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-velocity</artifactId>
             <version>${camel-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-csv</artifactId>
+            <version>${camel-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-xstream</artifactId>
+            <version>${camel-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.4.9</version>
         </dependency>
 
 		<dependency>
@@ -74,16 +92,17 @@
         </dependency>
 
         <dependency>
-            <groupId>xom</groupId>
-            <artifactId>xom</artifactId>
-            <version>1.2.5</version>
-        </dependency>
-
-        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>6.0.5</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.194</version>
+        </dependency>
+
 	</dependencies>
 
 	<build>
