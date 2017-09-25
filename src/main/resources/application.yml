@@ -2,7 +2,7 @@ application:
   name: m2m-monitriip-worker-servicos
   version: 1.1.0
 
-pontos-path-file: src/main/resources/files
+external-resources: src/main/resources/files
 
 spring:
   application:
@@ -13,7 +13,7 @@ camel:
     main-run-controller: true
 
 datasource:
-  url: jdbc:mysql://localhost/sso?useTimezone=true&serverTimezone=America/Sao_Paulo
+  url: jdbc:mysql://172.18.107.248/sso?useTimezone=true&serverTimezone=America/Sao_Paulo
   port: 3306
   user: frota
   password: frota

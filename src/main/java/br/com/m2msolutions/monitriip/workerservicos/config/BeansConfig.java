@@ -34,6 +34,7 @@ public class BeansConfig {
        return new EmbeddedDatabaseBuilder()
                     .setType(EmbeddedDatabaseType.H2)
                     .addScript("sql/create-pontos-table.sql")
+                    .addScript("sql/create-linhas-table.sql")
                     .build();
    }
 
@@ -43,13 +44,23 @@ public class BeansConfig {
     }
 
     @Bean
-    CsvDataFormat csvFormat(){
+    CsvDataFormat csvPontoFormat(){
         CsvDataFormat csvFormat = new CsvDataFormat();
         csvFormat.setDelimiter(';');
         csvFormat.setHeader(new String[]{"id","localidade","municipio","uf"});
         csvFormat.setUseMaps(true);
 
         return csvFormat;
+    }
+
+    @Bean
+    CsvDataFormat csvLinhaFormat(){
+        CsvDataFormat csvDataFormat = new CsvDataFormat();
+        csvDataFormat.setDelimiter(';');
+        csvDataFormat.setHeader(new String[]{"linha","id_cliente"});
+        csvDataFormat.setUseMaps(true);
+
+        return csvDataFormat;
     }
 
     @Bean

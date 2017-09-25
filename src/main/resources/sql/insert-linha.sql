@@ -1,0 +1,1 @@
+insert into LINHAS(linha,id_cliente) values (:#${body[linha]},:#${body[id_cliente]});

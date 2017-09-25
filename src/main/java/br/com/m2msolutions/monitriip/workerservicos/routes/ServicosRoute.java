@@ -27,6 +27,8 @@ public class ServicosRoute extends RouteBuilder {
     @Autowired
     XStreamDataFormat xStreamDataFormat;
 
+    //to("sql:classpath:sql/find-linha.sql?dataSource=h2&outputType=SelectOne").
+
     @Override
     public void configure() throws Exception {
 
