@@ -5,6 +5,7 @@ import br.com.m2msolutions.monitriip.workerservicos.dto.PontoDTO;
 import br.com.m2msolutions.monitriip.workerservicos.properties.RjConsultoresProperties;
 import br.com.m2msolutions.monitriip.workerservicos.properties.ServicoPersistenciaProperties;
 import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.http4.HttpMethods;
 import org.apache.camel.dataformat.xstream.XStreamDataFormat;
@@ -26,8 +27,6 @@ public class ServicosRoute extends RouteBuilder {
     private ServicoAggregationStrategy servicoAggregationStrategy;
     @Autowired
     XStreamDataFormat xStreamDataFormat;
-
-    //to("sql:classpath:sql/find-linha.sql?dataSource=h2&outputType=SelectOne").
 
     @Override
     public void configure() throws Exception {
@@ -55,6 +54,7 @@ public class ServicosRoute extends RouteBuilder {
                             choice().
                                 when(xpath("/servicoes/servico[count(retorno)='0']")).
                                     to("direct:mapPoints").
+                                    process("serviceValidFilter").
                                         marshal().
                                             json(JsonLibrary.Jackson).
                                         unmarshal().
@@ -92,6 +92,10 @@ public class ServicosRoute extends RouteBuilder {
                 to(String.format("sql:classpath:sql/find-ponto.sql?dataSource=h2&outputType=SelectOne&outputClass=%s",
                         PontoDTO.class.getName())).
                 transform(simple("${property.originalPayload.setPontoDestino(${body})}")).
+                setProperty("linha",simple("${property.originalPayload.linha}")).
+                process( e -> e.setProperty("linha",((String)e.getProperty("linha")).replaceAll("-",""))).
+                to(String.format("sql:classpath:sql/find-linha.sql?dataSource=h2&outputType=SelectOne")).
+                transform(simple("${property.originalPayload.setLinha(${body[linha]})}")).
             aggregate(simple("${property.correlationId}"),servicoAggregationStrategy).
                 completionSize(simple("${property.listSize}")).
                 setBody(simple("${body}")).

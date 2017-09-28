@@ -1,1 +1,1 @@
-select * from LINHAS where id_cliente=:#${property.id_cliente} and linha=:#${property.linha}
+select * from LINHAS where id_cliente=:#${property.idCliente} and linha=:#${property.linha}
