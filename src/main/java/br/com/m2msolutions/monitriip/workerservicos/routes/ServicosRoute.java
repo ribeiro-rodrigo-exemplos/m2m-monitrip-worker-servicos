@@ -5,12 +5,12 @@ import br.com.m2msolutions.monitriip.workerservicos.dto.PontoDTO;
 import br.com.m2msolutions.monitriip.workerservicos.properties.RjConsultoresProperties;
 import br.com.m2msolutions.monitriip.workerservicos.properties.ServicoPersistenciaProperties;
 import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.http4.HttpMethods;
 import org.apache.camel.dataformat.xstream.XStreamDataFormat;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,6 +19,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServicosRoute extends RouteBuilder {
 
+    @Value("${url-zona}")
+    private String urlZona;
     @Autowired
     private RjConsultoresProperties rjConsultoresProps;
     @Autowired
@@ -32,16 +34,17 @@ public class ServicosRoute extends RouteBuilder {
     public void configure() throws Exception {
 
         from(String.format("timer://wakeup?fixedRate=true&period=%s&delay=10s",rjConsultoresProps.getConsumerPeriod())).
+            routeId("route-principal").
+            setProperty("urlZona",constant(urlZona)).
             to("sql:classpath:sql/find-connection-info.sql?dataSource=mysql").
-                routeId("route-principal").
-                    split().
-                        body().
-                            parallelProcessing().
-                                setProperty("codConexao",simple("${body[cod_conexao]}")).
-                                setProperty("codCliente",simple("${body[cod_cliente]}")).
-                                setProperty("dtSincronismo",simple("${body[dt_sincronismo_servicos]}")).
-                                setProperty("idCliente",simple("${body[id_cliente]}")).
-                                to("direct:sendServices").
+                split().
+                    body().
+                        parallelProcessing().
+                            setProperty("codConexao",simple("${body[cod_conexao]}")).
+                            setProperty("codCliente",simple("${body[cod_cliente]}")).
+                            setProperty("dtSincronismo",simple("${body[dt_sincronismo_servicos]}")).
+                            setProperty("idCliente",simple("${body[id_cliente]}")).
+                            to("direct:sendServices").
         end();
 
         from("direct:sendServices").

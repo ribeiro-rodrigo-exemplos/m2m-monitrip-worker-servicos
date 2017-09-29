@@ -28,3 +28,5 @@ rjconsultores:
   url: 34.198.151.111:9991/WSMonitriip/busca/buscaServico
   authorization: Basic bTJtOnJqbTJtcmo= # credenciais para autenticação Http Basic do webservice rjconsultores
   consumer-period: 10s # período que o serviço irá dormir até realizar a próxima consulta
+
+url-zona: http://znh.m2mcontrol.com.br/#/
