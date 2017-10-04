@@ -126,9 +126,9 @@
                 </executions>
                 <configuration>
                     <shortRevisionLength>8</shortRevisionLength>
-                    <docheck>false</docheck>
-                    <doupdate>false</doupdate>
-                    <revisiononscmfailure />
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                    <revisionOnScmFailure />
                 </configuration>
             </plugin>
         </plugins>
