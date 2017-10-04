@@ -13,7 +13,7 @@ camel:
     main-run-controller: true
 
 datasource:
-  url: jdbc:mysql://172.18.107.248/sso?useTimezone=true&serverTimezone=America/Sao_Paulo
+  url: jdbc:mysql://172.18.107.248/sso?useTimezone=false&serverTimezone=UTC
   port: 3306
   user: frota
   password: frota
@@ -30,3 +30,6 @@ rjconsultores:
   consumer-period: 10s # período que o serviço irá dormir até realizar a próxima consulta
 
 url-zona: http://znh.m2mcontrol.com.br/#/
+
+logging:
+  file: /var/log/m2m-monitriip-worker-servicos.log

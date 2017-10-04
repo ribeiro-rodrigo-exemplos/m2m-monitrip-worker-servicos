@@ -33,7 +33,7 @@ public class ServicosRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        from(String.format("timer://wakeup?fixedRate=true&period=%s&delay=10s",rjConsultoresProps.getConsumerPeriod())).
+        from(String.format("timer://wakeup?fixedRate=true&period=%s&delay=25s",rjConsultoresProps.getConsumerPeriod())).
             routeId("route-principal").
             setProperty("urlZona",constant(urlZona)).
             to("sql:classpath:sql/find-connection-info.sql?dataSource=mysql").
