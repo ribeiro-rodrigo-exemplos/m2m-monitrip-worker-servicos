@@ -22,6 +22,6 @@ public class ServiceValidFilter implements Processor {
                         .filter(s -> s.getLinha() != null)
                         .collect(Collectors.toList());
 
-        exchange.getIn().setBody(servicos);
+        exchange.getIn().setBody(servicos.size() > 0 ? servicos : null );
     }
 }

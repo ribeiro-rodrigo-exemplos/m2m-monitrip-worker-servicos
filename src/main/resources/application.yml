@@ -18,7 +18,7 @@ datasource:
 
 servicoPersistencia:
   rabbitmq:
-    url: localhost/lazypersistence?queue=lazypersistence&username=guest&password=guest
+    url: 172.18.107.201/lazypersistence?queue=lazypersistence&username=admin&password=admin
   collection: ServicosMonitriip
   action: insert
 

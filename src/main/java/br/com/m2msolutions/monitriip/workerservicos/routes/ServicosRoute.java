@@ -57,13 +57,14 @@ public class ServicosRoute extends RouteBuilder {
                             choice().
                                 when(xpath("/servicoes/servico[count(retorno)='0']")).
                                     to("direct:mapPoints").
+                                    to("sql:classpath:sql/update-load-date.sql?dataSource=mysql").
                                     process("serviceValidFilter").
+                                    filter(body().isNotNull()).
                                         marshal().
                                             json(JsonLibrary.Jackson).
                                         unmarshal().
                                             string().
                                                 to("velocity:templates/servico-persistencia.vm").
-                                                to("sql:classpath:sql/update-load-date.sql?dataSource=mysql").
                                                 to(String.format("rabbitmq://%s&durable=true&autoDelete=false",
                                                     servicoPersistenciaProps.getUrlRabbitmq())).
                             endChoice().
