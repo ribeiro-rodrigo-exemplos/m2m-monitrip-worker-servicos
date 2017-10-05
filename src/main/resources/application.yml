@@ -1,12 +1,10 @@
 application:
-  name: m2m-monitriip-worker-servicos
-  version: 1.1.0
-
-external-resources: src/main/resources/files
+  name: @name@
+  version: @version@
 
 spring:
   application:
-    name: m2m-worker-servicos
+    name: ${application.name}
 
 camel:
   springboot:
@@ -30,6 +28,8 @@ rjconsultores:
   consumer-period: 10s # período que o serviço irá dormir até realizar a próxima consulta
 
 url-zona: http://znh.m2mcontrol.com.br/#/
+
+external-resources: src/main/resources/files
 
 logging:
   file: /var/log/m2m-monitriip-worker-servicos.log
