@@ -39,12 +39,11 @@ public class ServicosRoute extends RouteBuilder {
             to("sql:classpath:sql/find-connection-info.sql?dataSource=mysql").
                 split().
                     body().
-                        parallelProcessing().
-                            setProperty("codConexao",simple("${body[cod_conexao]}")).
-                            setProperty("codCliente",simple("${body[cod_cliente]}")).
-                            setProperty("dtSincronismo",simple("${body[dt_sincronismo_servicos]}")).
-                            setProperty("idCliente",simple("${body[id_cliente]}")).
-                            to("direct:sendServices").
+                        setProperty("codConexao",simple("${body[cod_conexao]}")).
+                        setProperty("codCliente",simple("${body[cod_cliente]}")).
+                        setProperty("dtSincronismo",simple("${body[dt_sincronismo_servicos]}")).
+                        setProperty("idCliente",simple("${body[id_cliente]}")).
+                        to("direct:sendServices").
         end();
 
         from("direct:sendServices").
