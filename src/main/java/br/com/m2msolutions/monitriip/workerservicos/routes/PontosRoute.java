@@ -3,6 +3,7 @@ package br.com.m2msolutions.monitriip.workerservicos.routes;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.dataformat.csv.CsvDataFormat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,17 +16,18 @@ import javax.annotation.PostConstruct;
 public class PontosRoute extends RouteBuilder{
 
     @Autowired
+    @Qualifier("csvPontoFormat")
     private CsvDataFormat csvFormat;
 
-    @Value("${pontos-path-file}")
-    private String pontosPathFile;
+    @Value("${external-resources}")
+    private String resourcesPath;
 
     @Override
     public void configure() throws Exception {
 
         onException(Exception.class).process(e -> {}).handled(true);
 
-        from(String.format("file:%s?noop=true",pontosPathFile)).
+        from(String.format("file:%s?noop=true&fileName=pontos.csv",resourcesPath)).
             log("Carregando pontos...").
             unmarshal(csvFormat).
                 split().

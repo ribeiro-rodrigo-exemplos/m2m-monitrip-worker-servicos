@@ -10,6 +10,7 @@ import org.apache.camel.component.http4.HttpMethods;
 import org.apache.camel.dataformat.xstream.XStreamDataFormat;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServicosRoute extends RouteBuilder {
 
+    @Value("${url-zona}")
+    private String urlZona;
     @Autowired
     private RjConsultoresProperties rjConsultoresProps;
     @Autowired
@@ -30,17 +33,17 @@ public class ServicosRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        from(String.format("timer://wakeup?fixedRate=true&period=%s&delay=10s",rjConsultoresProps.getConsumerPeriod())).
+        from(String.format("timer://wakeup?fixedRate=true&period=%s&delay=25s",rjConsultoresProps.getConsumerPeriod())).
+            routeId("route-principal").
+            setProperty("urlZona",constant(urlZona)).
             to("sql:classpath:sql/find-connection-info.sql?dataSource=mysql").
-                routeId("route-principal").
-                    split().
-                        body().
-                            parallelProcessing().
-                                setProperty("codConexao",simple("${body[cod_conexao]}")).
-                                setProperty("codCliente",simple("${body[cod_cliente]}")).
-                                setProperty("dtSincronismo",simple("${body[dt_sincronismo_servicos]}")).
-                                setProperty("idCliente",simple("${body[id_cliente]}")).
-                                to("direct:sendServices").
+                split().
+                    body().
+                        setProperty("codConexao",simple("${body[cod_conexao]}")).
+                        setProperty("codCliente",simple("${body[cod_cliente]}")).
+                        setProperty("dtSincronismo",simple("${body[dt_sincronismo_servicos]}")).
+                        setProperty("idCliente",simple("${body[id_cliente]}")).
+                        to("direct:sendServices").
         end();
 
         from("direct:sendServices").
@@ -53,12 +56,14 @@ public class ServicosRoute extends RouteBuilder {
                             choice().
                                 when(xpath("/servicoes/servico[count(retorno)='0']")).
                                     to("direct:mapPoints").
+                                    to("sql:classpath:sql/update-load-date.sql?dataSource=mysql").
+                                    process("serviceValidFilter").
+                                    filter(body().isNotNull()).
                                         marshal().
                                             json(JsonLibrary.Jackson).
                                         unmarshal().
                                             string().
                                                 to("velocity:templates/servico-persistencia.vm").
-                                                to("sql:classpath:sql/update-load-date.sql?dataSource=mysql").
                                                 to(String.format("rabbitmq://%s&durable=true&autoDelete=false",
                                                     servicoPersistenciaProps.getUrlRabbitmq())).
                             endChoice().
@@ -90,6 +95,10 @@ public class ServicosRoute extends RouteBuilder {
                 to(String.format("sql:classpath:sql/find-ponto.sql?dataSource=h2&outputType=SelectOne&outputClass=%s",
                         PontoDTO.class.getName())).
                 transform(simple("${property.originalPayload.setPontoDestino(${body})}")).
+                setProperty("linha",simple("${property.originalPayload.linha}")).
+                process( e -> e.setProperty("linha",((String)e.getProperty("linha")).replaceAll("-",""))).
+                to(String.format("sql:classpath:sql/find-linha.sql?dataSource=h2&outputType=SelectOne")).
+                transform(simple("${property.originalPayload.setLinha(${body[linha]})}")).
             aggregate(simple("${property.correlationId}"),servicoAggregationStrategy).
                 completionSize(simple("${property.listSize}")).
                 setBody(simple("${body}")).

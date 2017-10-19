@@ -1,26 +1,24 @@
 application:
-  name: m2m-monitriip-worker-servicos
-  version: 1.1.0
-
-pontos-path-file: src/main/resources/files
+  name: @name@
+  version: @version@
 
 spring:
   application:
-    name: m2m-worker-servicos
+    name: ${application.name}
 
 camel:
   springboot:
     main-run-controller: true
 
 datasource:
-  url: jdbc:mysql://localhost/sso?useTimezone=true&serverTimezone=America/Sao_Paulo
+  url: jdbc:mysql://172.18.107.248/sso?useTimezone=false&serverTimezone=UTC
   port: 3306
   user: frota
   password: frota
 
 servicoPersistencia:
   rabbitmq:
-    url: localhost/lazypersistence?queue=lazypersistence&username=guest&password=guest
+    url: 172.18.107.201/lazypersistence?queue=lazypersistence&username=admin&password=admin
   collection: ServicosMonitriip
   action: insert
 
@@ -28,3 +26,10 @@ rjconsultores:
   url: 34.198.151.111:9991/WSMonitriip/busca/buscaServico
   authorization: Basic bTJtOnJqbTJtcmo= # credenciais para autenticação Http Basic do webservice rjconsultores
   consumer-period: 10s # período que o serviço irá dormir até realizar a próxima consulta
+
+url-zona: http://znh.m2mcontrol.com.br/#/
+
+external-resources: src/main/resources/files
+
+logging:
+  file: /var/log/m2m-monitriip-worker-servicos.log
