@@ -27,6 +27,10 @@ rjconsultores:
   authorization: Basic bTJtOnJqbTJtcmo= # credenciais para autenticação Http Basic do webservice rjconsultores
   consumer-period: 10s # período que o serviço irá dormir até realizar a próxima consulta
 
+server:
+  port: 8080
+  max-threads: 100
+
 url-zona: http://znh.m2mcontrol.com.br/#/
 
 external-resources: src/main/resources/files
