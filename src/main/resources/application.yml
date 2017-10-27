@@ -28,7 +28,7 @@ rjconsultores:
   consumer-period: 10s # período que o serviço irá dormir até realizar a próxima consulta
 
 server:
-  port: 8080
+  port: 8989
   max-threads: 100
 
 url-zona: http://znh.m2mcontrol.com.br/#/
