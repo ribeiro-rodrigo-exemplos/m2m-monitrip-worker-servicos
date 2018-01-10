@@ -21,7 +21,11 @@ public class RjConsultoresDataConverter implements Processor {
                                              exchange.getIn().getExchange().getProperty("dtSincronismo")
                                            ).orElse(new Date());
 
-        exchange.setProperty("dtSincronismo",new SimpleDateFormat("YYYY-MM-dd").format(data));
-        exchange.setProperty("dataEnvioFormatada",new SimpleDateFormat("YYMMdd").format(data));
+        System.out.println(data+" ----------------- ");
+        exchange.setProperty("dtSincronismo",new SimpleDateFormat("yyyy-MM-dd").format(data));
+        exchange.setProperty("dataEnvioFormatada",new SimpleDateFormat("yyMMdd").format(data));
+
+        System.out.println(exchange.getProperty("dtSincronismo")+" --- ");
+        System.out.println(exchange.getProperty("dataEnvioFormatada"));
     }
 }
