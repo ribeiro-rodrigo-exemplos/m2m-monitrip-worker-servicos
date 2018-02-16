@@ -5,6 +5,7 @@ import br.com.m2msolutions.monitriip.workerservicos.dto.PontoDTO;
 import br.com.m2msolutions.monitriip.workerservicos.properties.RjConsultoresProperties;
 import br.com.m2msolutions.monitriip.workerservicos.properties.ServicoPersistenciaProperties;
 import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.http4.HttpMethods;
 import org.apache.camel.dataformat.xstream.XStreamDataFormat;
@@ -12,6 +13,8 @@ import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 /**
  * Created by Rodrigo Ribeiro on 18/02/17.
@@ -41,8 +44,18 @@ public class ServicosRoute extends RouteBuilder {
                     body().
                         setProperty("codConexao",simple("${body[cod_conexao]}")).
                         setProperty("codCliente",simple("${body[cod_cliente]}")).
-                        setProperty("dtSincronismo",simple("${body[dt_sincronismo_servicos]}")).
                         setProperty("idCliente",simple("${body[id_cliente]}")).
+                        process(exchange -> {
+                            Date hoje = new Date();
+                            Date amanha = (Date) hoje.clone();
+                            amanha.setDate(hoje.getDate() + 1);
+
+                            exchange.setProperty("dtSincronismo",hoje);
+                            exchange.setProperty("dtSincronismo2",amanha);
+
+                        }).
+                        to("direct:sendServices").
+                        setProperty("dtSincronismo",simple("${property.dtSincronismo2}")).
                         to("direct:sendServices").
         end();
 
