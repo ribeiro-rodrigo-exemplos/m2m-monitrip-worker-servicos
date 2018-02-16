@@ -2,9 +2,11 @@ package br.com.m2msolutions.monitriip.workerservicos.routes;
 
 import br.com.m2msolutions.monitriip.workerservicos.aggregation.ServicoAggregationStrategy;
 import br.com.m2msolutions.monitriip.workerservicos.dto.PontoDTO;
+import br.com.m2msolutions.monitriip.workerservicos.dto.ServicoDTO;
 import br.com.m2msolutions.monitriip.workerservicos.properties.RjConsultoresProperties;
 import br.com.m2msolutions.monitriip.workerservicos.properties.ServicoPersistenciaProperties;
 import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.http4.HttpMethods;
 import org.apache.camel.dataformat.xstream.XStreamDataFormat;
@@ -87,6 +89,7 @@ public class ServicosRoute extends RouteBuilder {
             split().
                 body().
                 setProperty("originalPayload",simple("${body}")).
+                process("servicoTransformProcess").
                 setProperty("idLocalidade",simple("${body.origem}")).
                 to(String.format("sql:classpath:sql/find-ponto.sql?dataSource=h2&outputType=SelectOne&outputClass=%s",
                         PontoDTO.class.getName())).

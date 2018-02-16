@@ -52,7 +52,9 @@ public class ServicoDTO {
     }
 
     public void setDestino(String destino) {
+
         this.destino = destino;
+
     }
 
     public String getHorarioSaida() {
@@ -92,6 +94,7 @@ public class ServicoDTO {
     }
 
     public void setOrigem(String origem) {
+
         this.origem = origem;
     }
 
@@ -100,6 +103,7 @@ public class ServicoDTO {
     }
 
     public void setPontoOrigem(PontoDTO pontoOrigem) {
+
         this.pontoOrigem = pontoOrigem;
     }
 
@@ -108,6 +112,7 @@ public class ServicoDTO {
     }
 
     public void setPontoDestino(PontoDTO pontoDestino) {
+
         this.pontoDestino = pontoDestino;
     }
 }
