@@ -5,7 +5,7 @@
 
 	<groupId>br.com.m2msolutions.monitriip.workerservicos</groupId>
 	<artifactId>m2m-monitriip-worker-servicos</artifactId>
-	<version>1.4.1</version>
+	<version>1.5.1</version>
 	<packaging>jar</packaging>
 
 	<name>m2m-monitriip-worker-servicos</name>
