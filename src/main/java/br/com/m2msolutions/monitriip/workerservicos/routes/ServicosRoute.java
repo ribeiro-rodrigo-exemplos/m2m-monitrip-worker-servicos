@@ -3,9 +3,7 @@ package br.com.m2msolutions.monitriip.workerservicos.routes;
 import br.com.m2msolutions.monitriip.workerservicos.aggregation.ServicoAggregationStrategy;
 import br.com.m2msolutions.monitriip.workerservicos.dto.PontoDTO;
 import br.com.m2msolutions.monitriip.workerservicos.properties.RjConsultoresProperties;
-import br.com.m2msolutions.monitriip.workerservicos.properties.ServicoPersistenciaProperties;
 import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.http4.HttpMethods;
 import org.apache.camel.dataformat.xstream.XStreamDataFormat;
@@ -13,8 +11,6 @@ import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 /**
  * Created by Rodrigo Ribeiro on 18/02/17.
@@ -26,8 +22,6 @@ public class ServicosRoute extends RouteBuilder {
     private String urlZona;
     @Autowired
     private RjConsultoresProperties rjConsultoresProps;
-    @Autowired
-    private ServicoPersistenciaProperties servicoPersistenciaProps;
     @Autowired
     private ServicoAggregationStrategy servicoAggregationStrategy;
     @Autowired
@@ -45,40 +39,31 @@ public class ServicosRoute extends RouteBuilder {
                         setProperty("codConexao",simple("${body[cod_conexao]}")).
                         setProperty("codCliente",simple("${body[cod_cliente]}")).
                         setProperty("idCliente",simple("${body[id_cliente]}")).
-                        process(exchange -> {
-                            Date hoje = new Date();
-                            Date amanha = (Date) hoje.clone();
-                            amanha.setDate(hoje.getDate() + 1);
-
-                            exchange.setProperty("dtSincronismo",hoje);
-                            exchange.setProperty("dtSincronismo2",amanha);
-
-                        }).
+                        process("generateDateProcess").
+                        setProperty("id", simple("${property.idHoje}")).
                         to("direct:sendServices").
+                        setProperty("id", simple("${property.idAmanha}")).
                         setProperty("dtSincronismo",simple("${property.dtSincronismo2}")).
                         to("direct:sendServices").
         end();
 
         from("direct:sendServices").
             routeId("route-send").
-                transacted().
-                    setProperty("collection",constant(servicoPersistenciaProps.getCollection())).
-                    setProperty("action",constant(servicoPersistenciaProps.getAction())).
-                    to("direct:loadServices").
-                        unmarshal().string().
-                            choice().
-                                when(xpath("/servicoes/servico[count(retorno)='0']")).
-                                    to("direct:mapPoints").
-                                    to("sql:classpath:sql/update-load-date.sql?dataSource=mysql").
-                                    process("serviceValidFilter").
-                                    filter(body().isNotNull()).
-                                        marshal().
-                                            json(JsonLibrary.Jackson).
-                                        unmarshal().
-                                            string().
-                                                to("velocity:templates/servico-persistencia.vm").
-                                                to(String.format("rabbitmq://%s&durable=true&autoDelete=false",
-                                                    servicoPersistenciaProps.getUrlRabbitmq())).
+                to("direct:loadServices").
+                    unmarshal().string().
+                        choice().
+                            when(xpath("/servicoes/servico[count(retorno)='0']")).
+                                to("direct:mapPoints").
+                                to("sql:classpath:sql/update-load-date.sql?dataSource=mysql").
+                                process("serviceValidFilter").
+                                filter(body().isNotNull()).
+                                    marshal().
+                                        json(JsonLibrary.Jackson).
+                                    unmarshal().
+                                        string().
+                                            to("velocity:templates/servico-persistencia.vm").
+                                            to("mongodb:monitriipDb?database=monitriip_znh&collection=servicosMonitriip&operation=save").
+
                             endChoice().
         end();
 
