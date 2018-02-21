@@ -4,7 +4,6 @@ import br.com.m2msolutions.monitriip.workerservicos.aggregation.ServicoAggregati
 import br.com.m2msolutions.monitriip.workerservicos.dto.PontoDTO;
 import br.com.m2msolutions.monitriip.workerservicos.dto.ServicoDTO;
 import br.com.m2msolutions.monitriip.workerservicos.properties.RjConsultoresProperties;
-import br.com.m2msolutions.monitriip.workerservicos.properties.ServicoPersistenciaProperties;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
@@ -26,8 +25,6 @@ public class ServicosRoute extends RouteBuilder {
     @Autowired
     private RjConsultoresProperties rjConsultoresProps;
     @Autowired
-    private ServicoPersistenciaProperties servicoPersistenciaProps;
-    @Autowired
     private ServicoAggregationStrategy servicoAggregationStrategy;
     @Autowired
     XStreamDataFormat xStreamDataFormat;
@@ -43,31 +40,32 @@ public class ServicosRoute extends RouteBuilder {
                     body().
                         setProperty("codConexao",simple("${body[cod_conexao]}")).
                         setProperty("codCliente",simple("${body[cod_cliente]}")).
-                        setProperty("dtSincronismo",simple("${body[dt_sincronismo_servicos]}")).
                         setProperty("idCliente",simple("${body[id_cliente]}")).
+                        process("generateDateProcess").
+                        setProperty("id", simple("${property.idHoje}")).
+                        to("direct:sendServices").
+                        setProperty("id", simple("${property.idAmanha}")).
+                        setProperty("dtSincronismo",simple("${property.dtSincronismo2}")).
                         to("direct:sendServices").
         end();
 
         from("direct:sendServices").
             routeId("route-send").
-                transacted().
-                    setProperty("collection",constant(servicoPersistenciaProps.getCollection())).
-                    setProperty("action",constant(servicoPersistenciaProps.getAction())).
-                    to("direct:loadServices").
-                        unmarshal().string().
-                            choice().
-                                when(xpath("/servicoes/servico[count(retorno)='0']")).
-                                    to("direct:mapPoints").
-                                    to("sql:classpath:sql/update-load-date.sql?dataSource=mysql").
-                                    process("serviceValidFilter").
-                                    filter(body().isNotNull()).
-                                        marshal().
-                                            json(JsonLibrary.Jackson).
-                                        unmarshal().
-                                            string().
-                                                to("velocity:templates/servico-persistencia.vm").
-                                                to(String.format("rabbitmq://%s&durable=true&autoDelete=false",
-                                                    servicoPersistenciaProps.getUrlRabbitmq())).
+                to("direct:loadServices").
+                    unmarshal().string().
+                        choice().
+                            when(xpath("/servicoes/servico[count(retorno)='0']")).
+                                to("direct:mapPoints").
+                                to("sql:classpath:sql/update-load-date.sql?dataSource=mysql").
+                                process("serviceValidFilter").
+                                filter(body().isNotNull()).
+                                    marshal().
+                                        json(JsonLibrary.Jackson).
+                                    unmarshal().
+                                        string().
+                                            to("velocity:templates/servico-persistencia.vm").
+                                            to("mongodb:monitriipDb?database=monitriip_znh&collection=servicosMonitriip&operation=save").
+
                             endChoice().
         end();
 

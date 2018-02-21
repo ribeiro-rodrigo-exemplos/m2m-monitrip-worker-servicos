@@ -11,16 +11,10 @@ camel:
     main-run-controller: true
 
 datasource:
-  url: jdbc:mysql://172.18.107.248/sso?useTimezone=false&serverTimezone=UTC
+  url: jdbc:mysql://172.18.107.238/sso?useTimezone=false&serverTimezone=UTC
   port: 3306
   user: frota
   password: frota
-
-servicoPersistencia:
-  rabbitmq:
-    url: 172.18.107.201/lazypersistence?queue=lazypersistence&username=admin&password=admin
-  collection: ServicosMonitriip
-  action: insert
 
 rjconsultores:
   url: 34.198.151.111:9991/WSMonitriip/busca/buscaServico
@@ -31,7 +25,11 @@ server:
   port: 8989
   max-threads: 100
 
-url-zona: http://znh.m2mcontrol.com.br/#/
+mongo:
+  host: localhost
+  port: 27017
+
+url-zona: http://znd2.m2mcontrol.com.br/#/
 
 external-resources: src/main/resources/files
 
