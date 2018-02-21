@@ -56,7 +56,6 @@ public class ServicosRoute extends RouteBuilder {
                         choice().
                             when(xpath("/servicoes/servico[count(retorno)='0']")).
                                 to("direct:mapPoints").
-                                to("sql:classpath:sql/update-load-date.sql?dataSource=mysql").
                                 process("serviceValidFilter").
                                 filter(body().isNotNull()).
                                     marshal().
