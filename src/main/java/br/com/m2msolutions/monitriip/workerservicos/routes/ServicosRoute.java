@@ -3,6 +3,7 @@ package br.com.m2msolutions.monitriip.workerservicos.routes;
 import br.com.m2msolutions.monitriip.workerservicos.aggregation.ServicoAggregationStrategy;
 import br.com.m2msolutions.monitriip.workerservicos.dto.PontoDTO;
 import br.com.m2msolutions.monitriip.workerservicos.dto.ServicoDTO;
+import br.com.m2msolutions.monitriip.workerservicos.properties.MongoProperties;
 import br.com.m2msolutions.monitriip.workerservicos.properties.RjConsultoresProperties;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -28,6 +29,8 @@ public class ServicosRoute extends RouteBuilder {
     private ServicoAggregationStrategy servicoAggregationStrategy;
     @Autowired
     XStreamDataFormat xStreamDataFormat;
+    @Autowired
+    private MongoProperties mongoProperties;
 
     @Override
     public void configure() throws Exception {
@@ -63,7 +66,7 @@ public class ServicosRoute extends RouteBuilder {
                                     unmarshal().
                                         string().
                                             to("velocity:templates/servico-persistencia.vm").
-                                            to("mongodb:monitriipDb?database=monitriip_znh&collection=servicosMonitriip&operation=save").
+                                            to(String.format("mongodb:monitriipDb?database=%s&collection=servicosMonitriip&operation=save",mongoProperties.getDatabase())).
 
                             endChoice().
         end();

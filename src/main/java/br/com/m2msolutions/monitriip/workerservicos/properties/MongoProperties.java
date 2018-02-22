@@ -9,6 +9,7 @@ public class MongoProperties {
 
     private String host;
     private Integer port;
+    private String database;
 
     public String getHost() {
         return host;
@@ -24,5 +25,13 @@ public class MongoProperties {
 
     public void setPort(Integer port) {
         this.port = port;
+    }
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
     }
 }
