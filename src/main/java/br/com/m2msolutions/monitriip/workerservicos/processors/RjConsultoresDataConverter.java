@@ -2,6 +2,8 @@ package br.com.m2msolutions.monitriip.workerservicos.processors;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -13,6 +15,8 @@ import java.util.Optional;
 @Component
 public class RjConsultoresDataConverter implements Processor {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @Override
     public void process(Exchange exchange) throws Exception {
 
@@ -21,11 +25,9 @@ public class RjConsultoresDataConverter implements Processor {
                                              exchange.getIn().getExchange().getProperty("dtSincronismo")
                                            ).orElse(new Date());
 
-        System.out.println(data+" ----------------- ");
+        logger.info(String.format("%s - %s",data,exchange.getProperty("idCliente")));
         exchange.setProperty("dtSincronismo",new SimpleDateFormat("yyyy-MM-dd").format(data));
         exchange.setProperty("dataEnvioFormatada",new SimpleDateFormat("yyMMdd").format(data));
 
-        System.out.println(exchange.getProperty("dtSincronismo")+" --- ");
-        System.out.println(exchange.getProperty("dataEnvioFormatada"));
     }
 }

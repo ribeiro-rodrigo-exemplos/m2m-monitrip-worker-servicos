@@ -1,10 +1,14 @@
 package br.com.m2msolutions.monitriip.workerservicos.config;
 
 import br.com.m2msolutions.monitriip.workerservicos.dto.ServicoDTO;
+import br.com.m2msolutions.monitriip.workerservicos.properties.MongoProperties;
+import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
 import com.thoughtworks.xstream.XStream;
 import org.apache.camel.dataformat.csv.CsvDataFormat;
 import org.apache.camel.dataformat.xstream.XStreamDataFormat;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,11 +26,20 @@ import java.util.List;
 @Configuration
 public class BeansConfig {
 
+    @Autowired
+    MongoProperties mongoProperties;
+
     @Bean
     @Primary
     @ConfigurationProperties(prefix = "datasource")
     MysqlConnectionPoolDataSource mysql(){
         return new MysqlConnectionPoolDataSource();
+    }
+
+    @Bean
+    //@ConfigurationProperties(prefix = "mongo")
+    Mongo monitriipDb(){
+        return new MongoClient(mongoProperties.getHost(), mongoProperties.getPort());
     }
 
    @Bean

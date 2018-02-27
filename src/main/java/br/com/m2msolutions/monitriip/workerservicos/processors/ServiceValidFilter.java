@@ -25,3 +25,4 @@ public class ServiceValidFilter implements Processor {
         exchange.getIn().setBody(servicos.size() > 0 ? servicos : null );
     }
 }
+
