@@ -28,7 +28,7 @@ server:
 mongo:
   host: localhost
   port: 27017
-  database: monitriip
+  database: monitriip_znh
 
 url-zona: http://znd2.m2mcontrol.com.br/#/
 

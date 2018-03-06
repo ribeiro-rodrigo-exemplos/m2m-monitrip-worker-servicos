@@ -61,9 +61,7 @@ public class ServicoDTO {
         return horarioSaida;
     }
 
-    public void setHorarioSaida(String horarioSaida) {
-        this.horarioSaida = horarioSaida;
-    }
+    public void setHorarioSaida(String horarioSaida) { this.horarioSaida = horarioSaida; }
 
     public String getLinha() {
         return linha;
