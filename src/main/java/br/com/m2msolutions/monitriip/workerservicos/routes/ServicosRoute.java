@@ -66,7 +66,7 @@ public class ServicosRoute extends RouteBuilder {
                                     unmarshal().
                                         string().
                                             to("velocity:templates/servico-persistencia.vm").
-                                            to(String.format("mongodb:monitriipDb?database=%s&collection=servicosMonitriip&operation=save",mongoProperties.getDatabase())).
+                                            to(String.format("mongodb:monitriipDb?database=%s&collection=ServicosMonitriip&operation=save",mongoProperties.getDatabase())).
 
                             endChoice().
         end();
