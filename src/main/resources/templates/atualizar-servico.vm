@@ -1,0 +1,13 @@
+[
+    {
+        "_id": "${exchange.properties.id}"
+    },
+
+    {
+        "$addToSet":{
+            "servicos":{
+                "$each":${body}
+            }
+        }
+    }
+]
