@@ -11,7 +11,7 @@ camel:
     main-run-controller: true
 
 datasource:
-  url: jdbc:mysql://172.18.107.238/sso?useTimezone=false&serverTimezone=UTC
+  url: jdbc:mysql://mysql-znd/sso?useTimezone=false&serverTimezone=UTC
   port: 3306
   user: frota
   password: frota
@@ -19,16 +19,16 @@ datasource:
 rjconsultores:
   url: 34.198.151.111:9991/WSMonitriip/busca/buscaServico
   authorization: Basic bTJtOnJqbTJtcmo= # credenciais para autenticação Http Basic do webservice rjconsultores
-  consumer-period: 10s # período que o serviço irá dormir até realizar a próxima consulta
+  consumer-period: 2m # período que o serviço irá dormir até realizar a próxima consulta
 
 server:
   port: 8989
   max-threads: 100
 
 mongo:
-  host: localhost
+  host: mongo-znd
   port: 27017
-  database: monitriip_znh
+  database: monitriip_znd
 
 url-zona: http://znd2.m2mcontrol.com.br/#/
 

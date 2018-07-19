@@ -5,6 +5,8 @@ import br.com.m2msolutions.monitriip.workerservicos.dto.PontoDTO;
 import br.com.m2msolutions.monitriip.workerservicos.dto.ServicoDTO;
 import br.com.m2msolutions.monitriip.workerservicos.properties.MongoProperties;
 import br.com.m2msolutions.monitriip.workerservicos.properties.RjConsultoresProperties;
+import com.mongodb.DBObject;
+import com.mongodb.client.result.UpdateResult;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
@@ -65,9 +67,22 @@ public class ServicosRoute extends RouteBuilder {
                                         json(JsonLibrary.Jackson).
                                     unmarshal().
                                         string().
-                                            to("velocity:templates/servico-persistencia.vm").
-                                            to(String.format("mongodb:monitriipDb?database=%s&collection=ServicosMonitriip&operation=save",mongoProperties.getDatabase())).
-
+                                            setProperty("originalPayload",simple("${body}")).
+                                            to("velocity:templates/atualizar-servico.vm").
+                                            convertBodyTo(DBObject.class).
+                                            to(String.format("mongodb:monitriipDb?database=%s&collection=ServicosMonitriip&operation=update",mongoProperties.getDatabase())).
+                                            process(e -> {
+                                                UpdateResult update = (UpdateResult) e.getIn().getBody();
+                                                Boolean encontrado = update.getMatchedCount() > 0;
+                                                e.setProperty("encontrou",encontrado);
+                                            }).
+                                            choice().
+                                                when(exchangeProperty("encontrou").isEqualTo(false)).
+                                                    log("nao encontrado").
+                                                    setBody(exchangeProperty("originalPayload")).
+                                                    to("velocity:templates/gravar-servico.vm").
+                                                    convertBodyTo(DBObject.class).
+                                                    to(String.format("mongodb:monitriipDb?database=%s&collection=ServicosMonitriip&operation=save",mongoProperties.getDatabase())).
                             endChoice().
         end();
 
